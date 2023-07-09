@@ -9,7 +9,7 @@ const route = Router();
 const authenticate = passport.authenticate('jwt', { session: false });
 
 route.post(
-  '/api/users/',
+  '/users',
   authenticate,
   [
     body('email').isEmail().withMessage('not a valid email'),
@@ -21,7 +21,8 @@ route.post(
   authController.signUp
 );
 
-route.post('/api/auth/signin', authController.signIn);
-route.get('/api/token', authController.getToken);
+route.post('/signin', authController.signIn);
+route.get('/signout', authenticate, authController.signOut);
+route.get('/token', authController.getToken);
 
 export default route;

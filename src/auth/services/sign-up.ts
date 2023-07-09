@@ -7,6 +7,11 @@ import { UserInfo } from '../../../types/user';
 import User from '../models/User';
 import { Either, Right, Left } from '../../../utils/either';
 
+/**
+ * this function will return a newly created user
+ * @param {any} body is json object containing the necessary data that need to be registered
+ * @returns {Either<GeneralError, UserInfo>} will return an either type to ease response handling
+ */
 export default async (body: any): Promise<Either<GeneralError, UserInfo>> => {
   const newUser = new User(body);
   try {

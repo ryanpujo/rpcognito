@@ -7,11 +7,13 @@ import passport from 'passport';
 import './../config/passport';
 import { connectToRedis } from '../config/redisClient';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 
 const app: Application = express();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(helmet());
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // update to match the domain you will make the request from
   res.header(
@@ -27,7 +29,7 @@ app.get('/hello', (req: Request, res: Response) => {
   res.send('hello world');
 });
 
-app.use(authRoutes);
+app.use('/api', authRoutes);
 
 app.use(handleError);
 

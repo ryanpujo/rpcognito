@@ -3,4 +3,4 @@ import signUpRoute from './route';
 
 export const authRoutes = Router();
 
-authRoutes.use(signUpRoute);
+authRoutes.use('/auth', signUpRoute);

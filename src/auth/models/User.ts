@@ -49,17 +49,19 @@ UserSchema.pre(
   }
 );
 
-UserSchema.methods.comparePassword = function (
+export const comparePassword = function (
+  this: any,
   plainPassword: string,
   cb: (err: Error | undefined, isMatch: boolean) => void
 ) {
+  const user = this as UserDocument;
   compare(
     plainPassword,
-    this.password,
+    user.password,
     (err: Error | undefined, isMatch: boolean) => {
       cb(err, isMatch);
     }
   );
 };
-
+UserSchema.methods.comparePassword = comparePassword;
 export default model<UserDocument>('User', UserSchema);

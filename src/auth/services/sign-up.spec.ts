@@ -5,6 +5,7 @@ import { GeneralError } from '../../../types/error';
 import { UserInfo } from '../../../types/user';
 import { Either } from '../../../utils/either';
 import signUp from './sign-up';
+import User from '../models/User';
 
 describe('test save', () => {
   const userTest: UserInfo = {

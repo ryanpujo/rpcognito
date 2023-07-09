@@ -1,6 +1,6 @@
 import { createCipheriv, randomBytes, createDecipheriv } from 'crypto';
 
-type EncryptedMessage = {
+export type EncryptedMessage = {
   iv: Buffer;
   encrypted: string;
 };
@@ -23,7 +23,7 @@ export function decryptMessage(
   const decipher = createDecipheriv(
     'aes-256-cbc',
     Buffer.from(key),
-    encryptedMessage.iv
+    Buffer.from(encryptedMessage.iv)
   );
   let decrypted = decipher.update(encryptedMessage.encrypted, 'hex', 'utf8');
   decrypted += decipher.final('utf8');
