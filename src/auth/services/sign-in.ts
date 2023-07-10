@@ -1,16 +1,16 @@
-import { SignOptions, sign } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import {
   JWT_AUDIENCE,
   JWT_ISSUER,
   JWT_KEY,
-} from '../../../config/config.utils';
+} from '../../../config/config.utils.js';
 import mongoose from 'mongoose';
 
 export type Payload = {
   id: mongoose.Types.ObjectId;
 };
 
-export const signOpts: SignOptions = {
+export const signOpts: jwt.SignOptions = {
   expiresIn: 3 * 60,
   audience: JWT_AUDIENCE,
   issuer: JWT_ISSUER,
@@ -22,5 +22,5 @@ export const signOpts: SignOptions = {
  * @returns {string} the generated access token
  */
 export default (payload: Payload) => {
-  return sign(payload, `${JWT_KEY}`, signOpts);
+  return jwt.sign(payload, `${JWT_KEY}`, signOpts);
 };

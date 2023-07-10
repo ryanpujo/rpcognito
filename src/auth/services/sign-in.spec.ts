@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import signIn from './sign-in';
+import signIn from './sign-in.js';
 import mongoose from 'mongoose';
 
 describe('test sign in', () => {

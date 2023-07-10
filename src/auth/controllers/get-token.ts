@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { EncryptedMessage, decryptMessage } from '../services/encryption';
-import { ENCRYPTION_KEY, JWT_KEY } from '../../../config/config.utils';
-import Token from '../models/Token';
-import { sign, verify } from 'jsonwebtoken';
-import { signOpts } from '../services/sign-in';
-import { authService } from '../services';
+import { ENCRYPTION_KEY, JWT_KEY } from '../../../config/config.utils.js';
+import { redisClient } from '../../../config/redisClient.js';
+import { EncryptedMessage, decryptMessage } from '../services/encryption.js';
+import { authService } from '../services/index.js';
+import { signOpts } from '../services/sign-in.js';
+import jwt from 'jsonwebtoken';
 
 /**
  * this handler responds to POST request to the /api/auth/signin endpoint
@@ -17,26 +17,17 @@ import { authService } from '../services';
  */
 export default async (req: Request, res: Response) => {
   const refTokenEncrypted: EncryptedMessage = req.cookies.refreshing;
+  let jwtId: string;
   if (!refTokenEncrypted) {
-    return res.status(401).send('unauthorized');
+    return res.status(401).json('unauthorized');
   }
   const refToken = decryptMessage(refTokenEncrypted, `${ENCRYPTION_KEY}`);
-
-  const tokenDoc = await Token.findOne({
-    userId: refToken,
-    revoke: false,
-  });
-  if (!tokenDoc) {
-    return res.status(401).send('unauthorized');
-  }
-  let idToken: string;
   try {
-    verify(`${tokenDoc?.token}`, `${JWT_KEY}`, signOpts);
-    idToken = sign({ idToken: tokenDoc?.id }, `${JWT_KEY}`, signOpts);
+    jwtId = await authService.getIdToken(refToken);
   } catch (error) {
-    tokenDoc.revoke = true;
-    idToken = await authService.generateToken(refToken);
-    await tokenDoc?.save();
+    const idToken = await authService.generateToken(refToken);
+    await redisClient.setEx(refToken, idToken);
+    jwtId = jwt.sign({ idToken }, `${JWT_KEY}`, signOpts);
   }
-  res.status(200).json({ idToken });
+  res.status(200).json({ idToken: jwtId });
 };

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
-import { redisClient } from '../../../config/redisClient';
-import { authService } from '.';
+import { redisClient } from '../../../config/redisClient.js';
+import { authService } from './index.js';
+
 
 /**
  * return a newly created acces token

@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
-import { UserDocument } from '../src/auth/models/User';
-import { GeneralError, BadRequest } from '../types/error';
-import { UserInfo } from '../types/user';
-import { Left, Either, Right } from './either';
+import { UserDocument } from '../src/auth/models/User.js';
+import { GeneralError, BadRequest } from '../types/error.js';
+import { UserInfo } from '../types/user.js';
+import { Left, Either, Right } from './either.js';
+
 
 describe('test either', () => {
   it('left', () => {

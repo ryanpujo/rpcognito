@@ -1,8 +1,9 @@
-import signUp from './sign-up';
-import signIn from './sign-in';
-import saveToken from './save-token';
-import refreshToken from './refresh-token';
-import generateToken from './generate-token';
+import generateToken from "./generate-token.js";
+import refreshToken from "./refresh-token.js";
+import saveToken from "./save-token.js";
+import signIn from "./sign-in.js";
+import signUp from "./sign-up.js";
+import getIdToken from "./getid-token.js";
 
 export const authService = {
   signUp,
@@ -10,4 +11,5 @@ export const authService = {
   saveToken,
   refreshToken,
   generateToken,
+  getIdToken,
 };

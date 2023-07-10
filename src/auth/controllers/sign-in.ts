@@ -1,10 +1,13 @@
 import { validate } from 'email-validator';
 import { NextFunction, Request, Response } from 'express';
-import User, { UserDocument } from '../models/User';
-import { BadRequest, NotFound } from '../../../types/error';
-import { authService } from '../services';
-import { encryptMessage } from '../services/encryption';
-import { ENCRYPTION_KEY } from '../../../config/config.utils';
+import { ENCRYPTION_KEY, JWT_KEY } from '../../../config/config.utils.js';
+import { redisClient } from '../../../config/redisClient.js';
+import { NotFound, BadRequest } from '../../../types/error.js';
+import User, { UserDocument } from '../models/User.js';
+import { EncryptedMessage, encryptMessage } from '../services/encryption.js';
+import { authService } from '../services/index.js';
+import jwt from 'jsonwebtoken';
+import { signOpts } from '../services/sign-in.js';
 
 export const REFRESH_TOKEN = 'refreshing';
 
@@ -18,6 +21,10 @@ export const REFRESH_TOKEN = 'refreshing';
  * { idToken: 'jwtid' }
  */
 export default async (req: Request, res: Response, next: NextFunction) => {
+  const refTokenEncrypted: EncryptedMessage = req.cookies.refreshing;
+  if (refTokenEncrypted) {
+    return res.status(200).json('you are logged in');
+  }
   const { email, password } = req.body;
   let user: UserDocument | undefined | null;
   if (validate(email)) {
@@ -44,8 +51,10 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       return next(notFound);
     }
 
-    const jwtId = await authService.generateToken(user.id.toString());
+    const idToken = await authService.generateToken(user.id.toString());
     const refToken = encryptMessage(user.id.toString(), `${ENCRYPTION_KEY}`);
+    await redisClient.setEx(user.id.toString(), idToken);
+    const jwtId = jwt.sign({ idToken }, `${JWT_KEY}`, signOpts);
     const date = new Date();
     date.setDate(date.getDate() + 30);
     res

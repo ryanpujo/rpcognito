@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema, model } from 'mongoose';
-import { UserDocument } from './User';
+import { UserDocument } from './User.js';
 
 export type TokenDocument = Document & {
   id: mongoose.Types.ObjectId;

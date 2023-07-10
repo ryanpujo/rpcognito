@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { MONGO_URI } from './config.utils';
+import { MONGO_URI } from './config.utils.js';
 
 export const connect = () => {
   let isConnected = false;

@@ -1,13 +1,13 @@
-import express, { Application, Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import { handleError } from '../middleware/error';
-import { connect } from '../config/db';
-import { authRoutes } from './auth/routes';
-import passport from 'passport';
-import './../config/passport';
-import { connectToRedis } from '../config/redisClient';
 import cookieParser from 'cookie-parser';
+import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
+import '../config/passport.js';
+import passport from 'passport';
+import { handleError } from '../middleware/error.js';
+import { authRoutes } from './auth/routes/index.js';
+import { connect } from '../config/db.js';
+import { connectToRedis } from '../config/redisClient.js';
 
 const app: Application = express();
 

@@ -1,10 +1,11 @@
 import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt';
 import passport from 'passport';
-import User from '../src/auth/models/User';
-import { JWT_AUDIENCE, JWT_ISSUER, JWT_KEY } from './config.utils';
-import { redisClient } from './redisClient';
 import { verify } from 'jsonwebtoken';
-import { signOpts } from '../src/auth/services/sign-in';
+import User from '../src/auth/models/User.js';
+import { signOpts } from '../src/auth/services/sign-in.js';
+import { Unauthorized } from '../types/error.js';
+import { JWT_KEY, JWT_AUDIENCE, JWT_ISSUER } from './config.utils.js';
+import { redisClient } from './redisClient.js';
 
 const JwtStrategy = Strategy;
 const currentTime = new Date().getTime();
@@ -22,8 +23,12 @@ const opts: StrategyOptions = {
 passport.use(
   new JwtStrategy(opts, async function (payload, done) {
     const jwtToken = await redisClient.get(`${payload.idToken}`);
+    if (!jwtToken) {
+      const unauthorized = new Unauthorized();
+      return done(unauthorized, false);
+    }
     try {
-      const jwt_payload = verify(`${jwtToken}`, `${JWT_KEY}`, signOpts);
+      const jwt_payload = verify(jwtToken, `${JWT_KEY}`, signOpts);
       User.findOne({ id: jwt_payload?.sub })
         .then((user) => {
           if (user) {

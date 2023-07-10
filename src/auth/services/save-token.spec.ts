@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import saveToken from './save-token';
-import Token from '../models/Token';
+import saveToken from './save-token.js';
+import Token from '../models/Token.js';
 
 describe('saveToken', () => {
   const tokenTest = {

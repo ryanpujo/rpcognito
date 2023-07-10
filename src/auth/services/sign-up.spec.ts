@@ -1,11 +1,13 @@
 // jest.mock('../models/User.ts', () => require('../__mocks__/user'));
 
 import mongoose from 'mongoose';
-import { GeneralError } from '../../../types/error';
-import { UserInfo } from '../../../types/user';
-import { Either } from '../../../utils/either';
-import signUp from './sign-up';
-import User from '../models/User';
+
+import { Either } from '../../../utils/either.js';
+import User from '../models/User.js';
+import signUp from './sign-up.js';
+import { GeneralError } from '../../../types/error.js';
+import { UserInfo } from '../../../types/user.js';
+
 
 describe('test save', () => {
   const userTest: UserInfo = {

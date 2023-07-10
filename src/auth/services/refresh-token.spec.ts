@@ -1,6 +1,7 @@
-import { authService } from '.';
-import { redisClient } from '../../../config/redisClient';
-import refreshToken from './refresh-token';
+import { redisClient } from "../../../config/redisClient.js";
+import { authService } from "./index.js";
+import refreshToken from "./refresh-token.js";
+
 describe('refresh token', () => {
   const tokenTest = 'dd,mdmndmndrndm';
   jest.mock('redis', () => jest.requireActual('redis-mock'));

@@ -1,11 +1,12 @@
-import { mockReq, mockRes } from 'sinon-express-mock';
-import { authService } from '../services';
-import { UserInfo } from '../../../types/user';
 import mongoose from 'mongoose';
-import { Left, Right } from '../../../utils/either';
-import signUp from './sign-up';
 import Sinon from 'sinon';
-import { BadRequest } from '../../../types/error';
+import { mockReq, mockRes } from 'sinon-express-mock';
+import { BadRequest } from '../../../types/error.js';
+import { UserInfo } from '../../../types/user.js';
+import { Right, Left } from '../../../utils/either.js';
+import { authService } from '../services/index.js';
+import signUp from './sign-up.js';
+
 
 describe('sign up handler', () => {
   const userTest: UserInfo = {

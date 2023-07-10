@@ -22,6 +22,12 @@ export class BadRequest extends GeneralError {
   }
 }
 
+export class Unauthorized extends GeneralError {
+  constructor(message?: string) {
+    super(message ?? 'unauthorized');
+    this.statusCode = 401;
+  }
+}
 export class DuplicateError extends GeneralError {
   constructor(message: string, mongoCode: string | number | undefined) {
     super(message);

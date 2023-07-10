@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { authController } from '../controllers';
 import { body } from 'express-validator';
-import { validateReq } from '../../../middleware/validation-error';
 import passport from 'passport';
+import { validateReq } from '../../../middleware/validation-error.js';
+import { authController } from '../controllers/index.js';
 
 const route = Router();
 

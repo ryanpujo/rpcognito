@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
-import { GeneralError, RequestValidationError } from '../types/error';
+import { GeneralError, RequestValidationError } from '../types/error.js';
 
 export const handleError = (
   err: any,

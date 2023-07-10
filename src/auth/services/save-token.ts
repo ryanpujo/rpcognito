@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Token from '../models/Token';
+import Token from '../models/Token.js';
 
 /**
  * this function will return an access token id that just being saved

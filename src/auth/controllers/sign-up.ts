@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { authService } from '../services';
+import { authService } from '../services/index.js';
 
 /**
  * this handler responds to POST request to the /api/auth/users endpoint
