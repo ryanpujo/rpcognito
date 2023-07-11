@@ -1,29 +1,42 @@
-// import mongoose, { model } from 'mongoose';
-// import User, { UserDocument, comparePassword } from '../models/User';
-// import Sinon from 'sinon';
-// import { mockReq, mockRes } from 'sinon-express-mock';
-// import signIn from './sign-in';
-// import { authService } from '../services';
+import { mockReq, mockRes } from 'sinon-express-mock';
+import User from '../models/User.js';
+import signIn, { REFRESH_TOKEN } from './sign-in.js';
+import { authService } from '../services/index.js';
+import { redisClient } from '../../../config/redisClient.js';
+import jwt from 'jsonwebtoken';
 
-// describe('sign in', () => {
-//   const userTest = {
-//     id: new mongoose.Types.ObjectId(),
-//     email: 'fkdfk@dkfd.dfd',
-//     firstName: 'ryan',
-//     lastName: 'pujo',
-//     username: 'ryanpujo',
-//     password: 'lsdklsmmekmeefdk',
-//     comparePassword: comparePassword,
-//   };
-//   const req = mockReq();
-//   const res = mockRes();
-//   const next = jest.fn();
-//   it('should send an access token', async () => {
-//     jest.spyOn(model('User'), 'findOne').mockResolvedValueOnce(userTest);
-//     jest.spyOn(authService, 'generateToken').mockResolvedValueOnce('skjdsjd');
-//     const callback = jest.fn();
-//     await signIn(req, res, next);
-//     jest.setTimeout(2000);
-//     expect(res.status.calledWith(200)).toBe(true);
-//   });
-// });
+describe('sign in', () => {
+  it('should send an access token', async () => {
+    const req = mockReq({
+      cookies: {
+        [REFRESH_TOKEN]: null,
+      },
+      body: {
+        email: 'kjsjds',
+        password: 'kjdnfjdf',
+      },
+    });
+    const res = mockRes();
+    const next = import.meta.jest.fn();
+    import.meta.jest
+      .spyOn(User, 'findOne')
+      .mockResolvedValueOnce({ password: 'slknsndksdn' });
+    import.meta.jest
+      .spyOn(User.prototype, 'comparePassword')
+      .mockImplementationOnce(async () => true);
+    import.meta.jest
+      .spyOn(authService, 'generateToken')
+      .mockResolvedValueOnce('jksndjnsdj');
+    import.meta.jest.spyOn(redisClient, 'setEx').mockResolvedValueOnce('OKE');
+    import.meta.jest.spyOn(jwt, 'sign').mockImplementationOnce(() => 'dfdfd');
+    import.meta.jest
+      .spyOn(authService, 'encryptMessage')
+      .mockImplementationOnce(() => ({
+        encrypted: 'sjndjnsd',
+        iv: Buffer.from('sjsnjnsdjndjk'),
+      }));
+
+    await signIn(req, res, next);
+    expect(res.status.calledWith(200)).toBe(true);
+  });
+});

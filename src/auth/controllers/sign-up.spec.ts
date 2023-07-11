@@ -7,7 +7,6 @@ import { Right, Left } from '../../../utils/either.js';
 import { authService } from '../services/index.js';
 import signUp from './sign-up.js';
 
-
 describe('sign up handler', () => {
   const userTest: UserInfo = {
     id: new mongoose.Types.ObjectId(),
@@ -17,7 +16,7 @@ describe('sign up handler', () => {
     username: 'ryanpujo',
   };
   it('should return user obj', async () => {
-    jest
+    import.meta.jest
       .spyOn(authService, 'signUp')
       .mockImplementationOnce(async () => new Right(userTest));
     const req = mockReq();
@@ -33,7 +32,7 @@ describe('sign up handler', () => {
 
   it('should recieve an erro', async () => {
     const badReq = new BadRequest('an error');
-    jest
+    import.meta.jest
       .spyOn(authService, 'signUp')
       .mockImplementationOnce(async () => new Left(badReq));
 

@@ -2,12 +2,11 @@
 
 import mongoose from 'mongoose';
 
-import { Either } from '../../../utils/either.js';
 import User from '../models/User.js';
 import signUp from './sign-up.js';
 import { GeneralError } from '../../../types/error.js';
 import { UserInfo } from '../../../types/user.js';
-
+import { Either } from '../../../utils/either.js';
 
 describe('test save', () => {
   const userTest: UserInfo = {
@@ -19,7 +18,7 @@ describe('test save', () => {
   };
 
   it('should succes', async () => {
-    jest
+    import.meta.jest
       .spyOn(User.prototype, 'save')
       .mockImplementationOnce(() => Promise.resolve(userTest));
 
@@ -34,7 +33,7 @@ describe('test save', () => {
   });
 
   it('should failed', async () => {
-    jest
+    import.meta.jest
       .spyOn(User.prototype, 'save')
       .mockImplementationOnce(() => Promise.reject(new GeneralError('failed')));
 

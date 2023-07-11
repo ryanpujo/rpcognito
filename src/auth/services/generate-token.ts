@@ -1,11 +1,8 @@
-import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 
 import { nanoid } from 'nanoid';
-import { JWT_KEY } from '../../../config/config.utils.js';
 import { redisClient } from '../../../config/redisClient.js';
 import { authService } from './index.js';
-import { signOpts } from './sign-in.js';
 
 /**
  * return a newly created acces token

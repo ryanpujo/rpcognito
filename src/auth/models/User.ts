@@ -5,10 +5,7 @@ import mongoose, {
   model,
 } from 'mongoose';
 
-type ComparePasswordFunction = (
-  plainPassword: string,
-  cb: (err: Error | undefined, isMatch: boolean) => void
-) => void;
+type ComparePasswordFunction = (plainPassword: string) => Promise<boolean>;
 
 export type UserDocument = Document & {
   id: mongoose.Types.ObjectId;
@@ -49,19 +46,31 @@ UserSchema.pre(
   }
 );
 
-export const comparePassword = function (
+export const comparePassword: ComparePasswordFunction = function (
   this: any,
-  plainPassword: string,
-  cb: (err: Error | undefined, isMatch: boolean) => void
+  plainPassword: string
 ) {
   const user = this as UserDocument;
-  compare(
-    plainPassword,
-    user.password,
-    (err: Error | undefined, isMatch: boolean) => {
-      cb(err, isMatch);
-    }
-  );
+  // compare(
+  //   plainPassword,
+  //   user.password,
+  //   (err: Error | undefined, isMatch: boolean) => {
+  //     cb(err, isMatch);
+  //   }
+  // );
+  return new Promise((resolve, reject) => {
+    compare(
+      plainPassword,
+      user.password,
+      (err: Error | undefined, isMatch: boolean) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(isMatch);
+        }
+      }
+    );
+  });
 };
 UserSchema.methods.comparePassword = comparePassword;
 export default model<UserDocument>('User', UserSchema);

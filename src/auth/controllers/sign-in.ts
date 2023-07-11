@@ -1,13 +1,13 @@
 import { validate } from 'email-validator';
 import { NextFunction, Request, Response } from 'express';
+import { BadRequest, NotFound } from '../../../types/error.js';
+import User from '../models/User.js';
+import { EncryptedMessage } from '../services/encryption.js';
 import { ENCRYPTION_KEY, JWT_KEY } from '../../../config/config.utils.js';
 import { redisClient } from '../../../config/redisClient.js';
-import { NotFound, BadRequest } from '../../../types/error.js';
-import User, { UserDocument } from '../models/User.js';
-import { EncryptedMessage, encryptMessage } from '../services/encryption.js';
 import { authService } from '../services/index.js';
-import jwt from 'jsonwebtoken';
 import { signOpts } from '../services/sign-in.js';
+import jwt from 'jsonwebtoken';
 
 export const REFRESH_TOKEN = 'refreshing';
 
@@ -21,15 +21,15 @@ export const REFRESH_TOKEN = 'refreshing';
  * { idToken: 'jwtid' }
  */
 export default async (req: Request, res: Response, next: NextFunction) => {
-  const refTokenEncrypted: EncryptedMessage = req.cookies.refreshing;
+  const refTokenEncrypted: EncryptedMessage = req.cookies[REFRESH_TOKEN];
   if (refTokenEncrypted) {
     return res.status(200).json('you are logged in');
   }
   const { email, password } = req.body;
-  let user: UserDocument | undefined | null;
-  if (validate(email)) {
-    user = await User.findOne({ email: email });
-  } else {
+  let user = await User.findOne({
+    email: email,
+  });
+  if (!validate(email)) {
     user = await User.findOne({ username: email });
   }
 
@@ -37,22 +37,17 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     const notFound = new NotFound('user not found');
     return next(notFound);
   }
-
-  user.comparePassword(password, async (err, isMatch) => {
-    if (err) {
-      return next(err);
-    }
+  try {
+    const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       const badRequest = new BadRequest('wrong password');
       return next(badRequest);
     }
-    if (!user) {
-      const notFound = new NotFound('user not found');
-      return next(notFound);
-    }
-
     const idToken = await authService.generateToken(user.id.toString());
-    const refToken = encryptMessage(user.id.toString(), `${ENCRYPTION_KEY}`);
+    const refToken = authService.encryptMessage(
+      user.id.toString(),
+      `${ENCRYPTION_KEY}`
+    );
     await redisClient.setEx(user.id.toString(), idToken);
     const jwtId = jwt.sign({ idToken }, `${JWT_KEY}`, signOpts);
     const date = new Date();
@@ -66,5 +61,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         expires: date,
       })
       .json({ idToken: jwtId });
-  });
+  } catch (error) {
+    next(error);
+  }
 };

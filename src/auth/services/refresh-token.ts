@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import { redisClient } from '../../../config/redisClient.js';
 import { authService } from './index.js';
 
-
 /**
  * return a newly created acces token
  * @param {string} token is the refresh token use to refresh the acces token
