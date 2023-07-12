@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { MongoServerError } from "mongodb";
-import mongoose from "mongoose";
-import { GeneralError, DuplicateError, BadRequest } from "../../../types/error.js";
-import { UserInfo } from "../../../types/user.js";
-import { Either, Right, Left } from "../../../utils/either.js";
-import User from "../models/User.js";
-
-
+import { MongoServerError } from 'mongodb';
+import mongoose from 'mongoose';
+import {
+  GeneralError,
+  DuplicateError,
+  BadRequest,
+} from '../../../types/error.js';
+import { UserInfo } from '../../../types/user.js';
+import { Either, Right, Left } from '../../../utils/either.js';
+import User from '../models/User.js';
 
 /**
  * this function will return a newly created user

@@ -2,7 +2,7 @@ import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt';
 import passport from 'passport';
 import { verify } from 'jsonwebtoken';
 import User from '../src/auth/models/User.js';
-import { signOpts } from '../src/auth/services/sign-in.js';
+import { signOpts } from '../src/auth/services/sign.js';
 import { Unauthorized } from '../types/error.js';
 import { JWT_KEY, JWT_AUDIENCE, JWT_ISSUER } from './config.utils.js';
 import { redisClient } from './redisClient.js';

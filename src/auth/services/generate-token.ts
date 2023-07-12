@@ -10,7 +10,7 @@ import { authService } from './index.js';
  * @returns {string} the newly created acces token
  */
 export default async (userID: string): Promise<string> => {
-  const token = authService.signIn({ id: new mongoose.Types.ObjectId(userID) });
+  const token = authService.sign({ id: new mongoose.Types.ObjectId(userID) });
   const idToken = nanoid(10);
   await redisClient.setEx(idToken, token);
   return idToken;
