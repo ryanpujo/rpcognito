@@ -3,7 +3,10 @@ import { RedisClientType, createClient } from 'redis';
 export let redis: RedisClientType;
 
 export const connectToRedis = async () => {
-  redis = createClient({ url: 'redis://redis:6379' });
+  redis = createClient({
+    url: 'redis://redis:6379',
+    password: 'eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81',
+  });
   redis.on('connect', () => {
     console.log('connected to redis');
   });

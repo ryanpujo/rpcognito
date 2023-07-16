@@ -43,7 +43,12 @@ export default async (body: {
       user.id.toString(),
       `${ENCRYPTION_KEY}`
     );
-    await redisClient.setEx(user.id.toString(), idToken);
+    const isStored = await redisClient.setEx(user.id.toString(), idToken);
+    if (isStored != 'OK') {
+      const err = new GeneralError('internal error');
+      return new Left(err);
+    }
+
     const jwtId = jwt.sign({ idToken }, `${JWT_KEY}`, signOpts);
 
     return new Right({ jwtId, refToken });
